@@ -62,6 +62,12 @@ describe('prices$', () => {
     expect(latestEmission()).toEqual({})
   })
 
+  it('should emit object containing only the latest prices after pricesDto$ emits', () => {
+    mockPricesDto$.next({ symbol: 'HD', price: 332.12 })
+    mockPricesDto$.next({ symbol: 'AA', price: 24.49 })
+    expect(latestEmission()).toEqual({ HD: 332.12, AA: 24.49 })
+  })
+
   it('should not error', () => {
     expect(error).not.toBeCalled()
   })
