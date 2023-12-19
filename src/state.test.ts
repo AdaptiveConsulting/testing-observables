@@ -36,7 +36,7 @@ describe('prices$', () => {
 
   it('should emit object containing latest prices after pricesDto$ emits', () => {
     // call next() on the subject that mocks out the source observable
-    // priceDto$ that the observable under test depends on to simulate
+    // priceDto$ that the observable under test depends on, to simulate
     // that observable emitting prices, and ensure the new price is
     // emitted as expected in the observable under test
     mockPricesDto$.next({ symbol: 'XOM', price: 48.17 })
@@ -51,6 +51,15 @@ describe('prices$', () => {
     // updated in the resulting emission
     mockPricesDto$.next({ symbol: 'XOM', price: 48.21 })
     expect(latestEmission()).toEqual({ XOM: 48.21, BA: 218.93 })
+  })
+
+  it('should emit empty object after resetPrices$ emits', () => {
+    // call next() on the subject that mocks out the source observable
+    // resetPrices$ that the observable under test depends on, to simulate
+    // that observable emitting, and ensure that the prices lookup table
+    // is reset to an empty object
+    mockResetPrices$.next()
+    expect(latestEmission()).toEqual({})
   })
 
   it('should not error', () => {
