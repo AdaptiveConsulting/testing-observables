@@ -1,5 +1,6 @@
 import { Subject } from 'rxjs'
 import { Price } from './model'
+import { spyOnObservable } from './spyOnObservable'
 
 // create subjects to mock out the source observables that our
 // observable under test depends on
@@ -21,5 +22,19 @@ vi.doMock('./service', () => ({
 const { prices$ } = await import('./state')
 
 describe('prices$', () => {
-  // we are now ready to add our tests here
+  // spy on the observable under test, using the spyOnObservable utility
+  const { latestEmission, error, subscription } = spyOnObservable(prices$)
+
+  // ensure we unsubscribe when we are done to avoid memory leaks
+  afterAll(() => {
+    subscription.unsubscribe()
+  })
+
+  it('should initially emit empty object', () => {
+    expect(latestEmission()).toEqual({})
+  })
+
+  it('should not error', () => {
+    expect(error).not.toBeCalled()
+  })
 })
